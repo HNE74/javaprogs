@@ -18,6 +18,7 @@ import java.util.Random;
  *  -Set the next state as the current state.
  * End Do
  * End For
+ * http://mnemstudio.org/path-finding-q-learning-tutorial.htm
  * @author 057530
  */
 public class QLearningMain {
