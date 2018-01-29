@@ -41,9 +41,6 @@ public class QLearningMain {
 		  {  0,  0,  0,  0,  0,  0 }	  
 		};	
 	
-	int width = rMatrix[0].length;	
-	int height = rMatrix.length;
-	
 	int goalState = 5;
 	int episodes = 1000;
 	float gamma = 0.8f;
@@ -59,7 +56,16 @@ public class QLearningMain {
 		}
 				
 		normalizeMatrix(qMatrix);
+		System.out.println("qMatrix:");
 		printMatrix(qMatrix);
+		System.out.println("=========================");
+		System.out.println("Paths:");
+		for(int i=0; i<rMatrix.length; i++) {
+			if(i != goalState) {
+				printPath(i);
+			}
+			System.out.println();
+		}
 	}
 	
 	private void doEpisode() {		
@@ -69,7 +75,7 @@ public class QLearningMain {
 		do {	
 			// Select one among all possible actions for the current state and
 			// using this possible action, consider going to the next state.			
-			List<Pair<Integer, Integer>> actions = fetchRActions(state);			
+			List<Pair<Integer, Integer>> actions = fetchActions(state, rMatrix);			
 			int newState = actions.get(rand.nextInt(actions.size())).getElement0();	
 			
 			// Adjust Q state matrix
@@ -79,22 +85,11 @@ public class QLearningMain {
 		while(state < goalState); //  Do While the goal state hasn't been reached	
 	}
 	
-	private List<Pair<Integer, Integer>> fetchRActions(int state) {
+	private List<Pair<Integer, Integer>> fetchActions(int state, int[][] matrix) {
 		List<Pair<Integer, Integer>> actionList = new ArrayList<>();
-		for(int x=0; x<rMatrix[state].length; x++) {
-			if(rMatrix[state][x] > -1) {
-				actionList.add(new Pair<Integer, Integer>(x, rMatrix[state][x]));
-			}
-		}
-		
-		return actionList;
-	}
-	
-	private List<Pair<Integer, Integer>> fetchQActions(int state) {
-		List<Pair<Integer, Integer>> actionList = new ArrayList<>();
-		for(int x=0; x<qMatrix[state].length; x++) {
-			if(qMatrix[state][x] > -1) {
-				actionList.add(new Pair<Integer, Integer>(x, qMatrix[state][x]));
+		for(int x=0; x<matrix[state].length; x++) {
+			if(matrix[state][x] > -1) {
+				actionList.add(new Pair<Integer, Integer>(x, matrix[state][x]));
 			}
 		}
 		
@@ -104,7 +99,7 @@ public class QLearningMain {
 	private void calcQState(int state, int newState) {
 		int maxReward = -1;
 		int currentReward = rMatrix[state][newState];
-		List<Pair<Integer, Integer>> actionList = fetchQActions(newState);
+		List<Pair<Integer, Integer>> actionList = fetchActions(newState, qMatrix);
 		for(Pair<Integer, Integer> action : actionList) {
 			int reward = action.getElement1();
 			if(maxReward < reward) {
@@ -133,6 +128,33 @@ public class QLearningMain {
 		}		
 	}
 	
+	private List<Integer> fetchPath(int state) {
+		int newState = state;
+		List<Integer> result = new ArrayList<>();
+		result.add(state);
+		
+		if(state == goalState) {
+			return result;
+		}
+		
+		do
+		{
+			int max = -1;			
+			for(int i=0; i<qMatrix.length; i++) {
+				if(max < qMatrix[state][i]) {
+					max = qMatrix[state][i];
+					newState = i;
+				}
+			}
+			
+			result.add(newState);	
+			state = newState;
+		} 
+		while(state != goalState);
+		
+		return result;
+	}
+	
 	private void printMatrix(int[][] matrix) {
 		for (int y=0; y<matrix.length; y++)	{
 			StringBuilder line = new StringBuilder();
@@ -143,6 +165,13 @@ public class QLearningMain {
 				}
 			}
 			System.out.println(line.toString());
+		}
+	}
+	
+	private void printPath(int startState) {
+		List<Integer> path = fetchPath(startState);
+		for(Integer node : path) {
+			System.out.print(node + " - ");
 		}
 	}
 }
