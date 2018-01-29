@@ -55,13 +55,11 @@ public class QLearningMain {
 	
 	private void doQLearning() {
 		for(int i=0; i<episodes; i++) {
-			doEpisode();
-			
-			System.out.println("\nEpisode: " + i);
-			System.out.println("====================");			
-			printMatrix(qMatrix);	
-			
+			doEpisode();	
 		}
+				
+		normalizeMatrix(qMatrix);
+		printMatrix(qMatrix);
 	}
 	
 	private void doEpisode() {		
@@ -73,10 +71,12 @@ public class QLearningMain {
 			// using this possible action, consider going to the next state.			
 			List<Pair<Integer, Integer>> actions = fetchRActions(state);			
 			int newState = actions.get(rand.nextInt(actions.size())).getElement0();	
+			
+			// Adjust Q state matrix
 			calcQState(state, newState);
 			state = newState;
 		}	
-		while(state < 5); //  Do While the goal state hasn't been reached	
+		while(state < goalState); //  Do While the goal state hasn't been reached	
 	}
 	
 	private List<Pair<Integer, Integer>> fetchRActions(int state) {
@@ -116,6 +116,23 @@ public class QLearningMain {
 		qMatrix[state][newState] = qValue;	
 	}
 	
+	private void normalizeMatrix(int[][] matrix) {
+		float max = -1f;
+		for (int y=0; y<matrix.length; y++)	{		
+			for(int x=0; x<matrix[0].length; x++) {
+				if(max<matrix[y][x]) {
+					max = matrix[y][x];
+				}
+			}	
+		}
+		
+		for (int y=0; y<matrix.length; y++)	{		
+			for(int x=0; x<matrix[0].length; x++) {
+				matrix[y][x] = (int) (100 / max * matrix[y][x]);
+			}	
+		}		
+	}
+	
 	private void printMatrix(int[][] matrix) {
 		for (int y=0; y<matrix.length; y++)	{
 			StringBuilder line = new StringBuilder();
@@ -128,7 +145,4 @@ public class QLearningMain {
 			System.out.println(line.toString());
 		}
 	}
-	
-	//Q(1, 5) = R(1, 5) + 0.8 * Max[Q(5, 1), Q(5, 4), Q(5, 5)] = 100 + 0.8 * 0 = 100
-
 }
