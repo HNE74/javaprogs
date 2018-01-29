@@ -1,4 +1,4 @@
-package de.hdi.radarwidget;
+package de.hne.radarwidget;
 
 import java.util.ArrayList;
 import java.util.List;

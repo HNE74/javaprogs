@@ -1,4 +1,4 @@
-package de.hdi.radarwidget;
+package de.hne.radarwidget;
 
 /**
  * Object shown by the radar.
