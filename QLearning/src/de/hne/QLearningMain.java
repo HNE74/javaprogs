@@ -23,7 +23,7 @@ import java.util.Random;
  */
 public class QLearningMain {
 	
-	int[][] rMatrix = new int[][]{
+	int[][] rMatrixArr = new int[][]{
 		  { -1, -1, -1, -1,  0,  -1 },
 		  { -1, -1, -1,  0, -1, 100 },
 		  { -1, -1, -1,  0, -1,  -1 },
@@ -31,15 +31,19 @@ public class QLearningMain {
 		  {  0, -1, -1,  0, -1, 100 },
 		  { -1,  0, -1, -1,  0, 100 }		  
 		};
+	
+	IntMatrix rMatrix = null;
 		
-	int[][] qMatrix = new int[][]{
+	int[][] qMatrixArr = new int[][]{
 		  {  0,  0,  0,  0,  0,  0 },
 		  {  0,  0,  0,  0,  0,  0 },
 		  {  0,  0,  0,  0,  0,  0 },
 		  {  0,  0,  0,  0,  0,  0 },
 		  {  0,  0,  0,  0,  0,  0 },
 		  {  0,  0,  0,  0,  0,  0 }	  
-		};	
+		};
+	
+	IntMatrix qMatrix = null;
 	
 	int goalState = 5;
 	int episodes = 1000;
@@ -47,7 +51,13 @@ public class QLearningMain {
 	
 	public static void main(String args[]) {
 		QLearningMain qLearn = new QLearningMain();
+		qLearn.initLearning();
 		qLearn.doQLearning();		
+	}
+	
+	private void initLearning() {
+		rMatrix = new IntMatrix(rMatrixArr);
+		qMatrix = new IntMatrix(qMatrixArr);
 	}
 	
 	private void doQLearning() {
@@ -55,17 +65,13 @@ public class QLearningMain {
 			doEpisode();	
 		}
 				
-		normalizeMatrix(qMatrix);
+		qMatrix.normalizeMatrix();
 		System.out.println("qMatrix:");
-		printMatrix(qMatrix);
+		qMatrix.printMatrix();
 		System.out.println("=========================");
 		System.out.println("Paths:");
-		for(int i=0; i<rMatrix.length; i++) {
-			if(i != goalState) {
-				printPath(i);
-			}
-			System.out.println();
-		}
+		qMatrix.printAllPaths(5);
+
 	}
 	
 	private void doEpisode() {		
@@ -85,11 +91,11 @@ public class QLearningMain {
 		while(state < goalState); //  Do While the goal state hasn't been reached	
 	}
 	
-	private List<Pair<Integer, Integer>> fetchActions(int state, int[][] matrix) {
+	private List<Pair<Integer, Integer>> fetchActions(int state, IntMatrix matrix) {
 		List<Pair<Integer, Integer>> actionList = new ArrayList<>();
-		for(int x=0; x<matrix[state].length; x++) {
-			if(matrix[state][x] > -1) {
-				actionList.add(new Pair<Integer, Integer>(x, matrix[state][x]));
+		for(int x=0; x<matrix.getColumn(state).length; x++) {
+			if(matrix.getColumn(state)[x] > -1) {
+				actionList.add(new Pair<Integer, Integer>(x, matrix.getColumn(state)[x]));
 			}
 		}
 		
@@ -98,7 +104,7 @@ public class QLearningMain {
 	
 	private void calcQState(int state, int newState) {
 		int maxReward = -1;
-		int currentReward = rMatrix[state][newState];
+		int currentReward = rMatrix.getValue(state, newState);
 		List<Pair<Integer, Integer>> actionList = fetchActions(newState, qMatrix);
 		for(Pair<Integer, Integer> action : actionList) {
 			int reward = action.getElement1();
@@ -108,70 +114,12 @@ public class QLearningMain {
 		}
 		
 		int qValue = currentReward + (int) (((float) maxReward) * gamma);
-		qMatrix[state][newState] = qValue;	
+		qMatrix.setValue(state, newState, qValue);	
 	}
 	
-	private void normalizeMatrix(int[][] matrix) {
-		float max = -1f;
-		for (int y=0; y<matrix.length; y++)	{		
-			for(int x=0; x<matrix[0].length; x++) {
-				if(max<matrix[y][x]) {
-					max = matrix[y][x];
-				}
-			}	
-		}
-		
-		for (int y=0; y<matrix.length; y++)	{		
-			for(int x=0; x<matrix[0].length; x++) {
-				matrix[y][x] = (int) (100 / max * matrix[y][x]);
-			}	
-		}		
-	}
+
 	
-	private List<Integer> fetchPath(int state) {
-		int newState = state;
-		List<Integer> result = new ArrayList<>();
-		result.add(state);
-		
-		if(state == goalState) {
-			return result;
-		}
-		
-		do
-		{
-			int max = -1;			
-			for(int i=0; i<qMatrix.length; i++) {
-				if(max < qMatrix[state][i]) {
-					max = qMatrix[state][i];
-					newState = i;
-				}
-			}
-			
-			result.add(newState);	
-			state = newState;
-		} 
-		while(state != goalState);
-		
-		return result;
-	}
+
 	
-	private void printMatrix(int[][] matrix) {
-		for (int y=0; y<matrix.length; y++)	{
-			StringBuilder line = new StringBuilder();
-			for(int x=0; x<matrix[0].length; x++) {
-				line.append(String.format("%03d", matrix[y][x]));
-				if(x<matrix[0].length-1) {
-					line.append(", ");
-				}
-			}
-			System.out.println(line.toString());
-		}
-	}
-	
-	private void printPath(int startState) {
-		List<Integer> path = fetchPath(startState);
-		for(Integer node : path) {
-			System.out.print(node + " - ");
-		}
-	}
+
 }
