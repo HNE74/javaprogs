@@ -61,7 +61,7 @@ public class ListSorter {
 	}
 	
 	/**
-	 * Ausgabe einer Collection mit for-each und einer Methodenreferenz.
+	 * Ausgabe einer Collection mit for-each (interne Iteration) und einer Methodenreferenz.
 	 * @param values
 	 * @param txt
 	 */
