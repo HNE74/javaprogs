@@ -11,6 +11,7 @@ import java.util.function.UnaryOperator;
  * - Bulk Operationen
  * - Prädikate
  * - Interne Iteration: removeIf mit Prädikat
+ * - Unaere Operatoren
  */
 public class CollectionsExtensions {
 
