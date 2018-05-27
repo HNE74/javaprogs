@@ -2,6 +2,10 @@ package de.hne.dungeongenerator.strategy;
 
 import de.hne.dungeongenerator.data.Dungeon;
 
+/**
+ * Creates a dungeon consisting only of solid walls.
+ * @author hnema
+ */
 public class DungeonSolidCreationStrategy implements IDungeonCreationStrategy {
 
 	@Override

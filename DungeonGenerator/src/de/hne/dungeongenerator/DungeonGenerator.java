@@ -3,14 +3,14 @@ package de.hne.dungeongenerator;
 import de.hne.dungeongenerator.data.Dungeon;
 import de.hne.dungeongenerator.renderer.DungeonConsoleRenderer;
 import de.hne.dungeongenerator.renderer.IDungeonRenderer;
-import de.hne.dungeongenerator.strategy.DungeonRoomCreationStrategy;
+import de.hne.dungeongenerator.strategy.DungeonSquaredRoomCreationStrategy;
 import de.hne.dungeongenerator.strategy.DungeonSolidCreationStrategy;
 import de.hne.dungeongenerator.strategy.IDungeonCreationStrategy;
 
 public class DungeonGenerator {
 	
 	public enum DungeonType {
-		SOLID, ROOM;
+		SOLID, SQUARED_ROOM;
 	}
 	
 	
@@ -29,8 +29,8 @@ public class DungeonGenerator {
 		}
 		
 		switch (type) {
-			case ROOM:
-				creationStrategy = new DungeonRoomCreationStrategy();
+			case SQUARED_ROOM:
+				creationStrategy = new DungeonSquaredRoomCreationStrategy();
 				break;
 			case SOLID:
 				creationStrategy = new DungeonSolidCreationStrategy();
