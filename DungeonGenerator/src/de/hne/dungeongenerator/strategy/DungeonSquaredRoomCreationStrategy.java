@@ -66,10 +66,11 @@ public class DungeonSquaredRoomCreationStrategy implements IDungeonCreationStrat
 	private void createSmallRoom() {
 		int smallRoomWidth = random.nextInt(horSmallRoomShiftRand) + 3;
 		int smallRoomHeight = random.nextInt(verSmallRoomShiftRand) + 3;
-		Room smallRoom = new Room(1, 1, smallRoomHeight, smallRoomHeight);
+		
+		Room smallRoom = new Room(1, 1, smallRoomWidth, smallRoomHeight);
 		
 		for(int r=1; r<this.dungeon.getHeight() - smallRoomHeight; r++) {
-			for(int c=1; r<this.dungeon.getWidth() - smallRoomWidth; r++) {
+			for(int c=1; c<this.dungeon.getWidth() - smallRoomWidth; c++) {
 				smallRoom.setRow(r);
 				smallRoom.setCol(c);
 				if(smallRoomFit(smallRoom)) {
