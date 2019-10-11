@@ -118,7 +118,17 @@ public abstract class GameEngine extends Canvas implements Stage {
 		setIgnoreRepaint(true);
 		
 		// Init graphics context
-		this.g = (Graphics2D) strategy.getDrawGraphics();
+		boolean done = false;
+			while(!done) {
+			try {
+				this.g = (Graphics2D) strategy.getDrawGraphics();
+				done = true;
+			}
+			catch(IllegalStateException e) {
+				done = false;
+			}
+		}
+		
 		g.clearRect(0,0, this.stageWidth, this.stageHeight);
 
 		// Mouse cursor might be disabled when passing over
@@ -291,7 +301,7 @@ public abstract class GameEngine extends Canvas implements Stage {
 	 * Engine carries out the game.
 	 */
 	public void game() {
-		
+				
 		usedTime = 1000;
 		
 		// Init the game world
