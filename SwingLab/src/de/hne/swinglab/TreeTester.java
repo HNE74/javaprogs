@@ -10,7 +10,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 public class TreeTester extends JFrame {
 
@@ -47,7 +46,7 @@ public class TreeTester extends JFrame {
         this.setSize(400, 800);
         this.setVisible(true);
         
-        generator.addNodes(tree.getModel(), 4, 4);
+        generator.addNodes(tree.getModel());
         expandAllNodes(tree, 0, tree.getRowCount());
     }
     
