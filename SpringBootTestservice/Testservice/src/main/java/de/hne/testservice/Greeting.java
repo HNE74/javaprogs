@@ -1,4 +1,4 @@
-package de.hne.Testservice;
+package de.hne.testservice;
 
 public class Greeting {
 
