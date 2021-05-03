@@ -1,20 +1,13 @@
 package com.camunda.example.oauth2.filter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.ProcessEngines;
 import org.camunda.bpm.engine.rest.security.auth.AuthenticationResult;
 import org.camunda.bpm.engine.rest.security.auth.impl.ContainerBasedAuthenticationProvider;
-import org.camunda.bpm.webapp.impl.security.auth.Authentications;
-import org.camunda.bpm.webapp.impl.security.auth.UserAuthentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
