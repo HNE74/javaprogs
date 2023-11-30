@@ -20,7 +20,11 @@ import java.util.Map;
 public class SimpleAiController {
 
     private final AiClient aiClient;
+    @Value("classpath:/bikes.json")
+    private Resource bikesResource;
 
+    @Value("classpath:/system-qa.st")
+    private Resource systemBikePrompt;
     @Value("classpath:/my-prompt.st")
     private Resource promptResource;
 
