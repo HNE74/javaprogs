@@ -11,13 +11,11 @@ import org.springframework.ai.prompt.messages.UserMessage;
 import org.springframework.ai.retriever.VectorStoreRetriever;
 import org.springframework.ai.vectorstore.InMemoryVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
