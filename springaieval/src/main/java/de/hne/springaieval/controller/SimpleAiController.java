@@ -3,6 +3,8 @@ package de.hne.springaieval.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.client.AiClient;
 import org.springframework.ai.client.Generation;
+import org.springframework.ai.parser.BeanOutputParser;
+import org.springframework.ai.prompt.Prompt;
 import org.springframework.ai.prompt.PromptTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,7 +42,28 @@ public class SimpleAiController {
         return aiClient.generate(prompt).getGeneration();
     }
 
-    public record Completion(String message) {}
+    @GetMapping("/ai/output")
+    public ActorsFilms generate(@RequestParam(value = "actor", defaultValue = "Chuck Norris") String actor) {
+        var outputParser = new BeanOutputParser<>(ActorsFilms.class);
+
+        var format = outputParser.getFormat();
+        log.info("Output parser format is: {}", format);
+        var template = """
+                Erzeuge die Filmografie für den Schauspieler {actor}.
+                {format}
+                """;
+
+        var promptTemplate = new PromptTemplate(template, Map.of("actor", actor, "format", format));
+        var prompt = new Prompt(promptTemplate.createMessage());
+        var generation = aiClient.generate(prompt).getGeneration();
+
+        var actorsFilms = outputParser.parse(generation.getText());
+        return actorsFilms;
+    }
+
+    private record Completion(String message) {}
+
+    private record ActorsFilms(String actor, List<String> movies) {};
 }
 
 
